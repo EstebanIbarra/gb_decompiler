@@ -13,7 +13,7 @@ pub fn test_detect_rom() {
                 _ => RomType::Unknown,
             },
         };
-        let rom_type = RomType::from(&rom.data[..]);
+        let rom_type = RomType::from(rom.data.as_slice());
         assert_eq!(rom_type, expected);
     }
 }

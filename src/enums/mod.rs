@@ -31,6 +31,7 @@ impl From<&[u8]> for RomType {
 }
 
 pub enum Instruction {
+    Unknown,
     NOP,
     LD,
     INC,
