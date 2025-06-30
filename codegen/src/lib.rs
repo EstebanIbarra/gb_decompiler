@@ -38,7 +38,7 @@ impl From<String> for FlagAction {
             "N" => FlagAction::CopyN,
             "H" => FlagAction::CopyH,
             "C" => FlagAction::CopyC,
-            other => panic!("Unknow flag action: {}", other),
+            other => panic!("Unknow flag action: {other}"),
         }
     }
 }
