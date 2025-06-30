@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "Running pre-push hook..."
+
+if ! cargo fmt -- --check; then
+  echo "Formatting checks failed. Please run 'cargo fmt' to fix formatting issues."
+  exit 1
+fi
+echo "Formatting checks passed."
+
+if ! cargo clippy -- -D warnings; then
+  echo "Linting checks failed. Please fix the linting issues."
+  exit 1
+fi
+echo "Linting checks passed."
+
+if ! cargo test; then
+  echo "Unit tests failed. Please run 'cargo test' for more details."
+  exit 1
+fi
+echo "Unit tests passed."
+
+echo "Pre-push checks passed."
+exit 0
