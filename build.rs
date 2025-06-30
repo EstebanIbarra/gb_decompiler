@@ -89,7 +89,7 @@ fn init(out_dir: &str) {
 
 fn map_opcodes(mut code: String, opcodes: HashMap<String, RawOpcode>) -> String {
     for idx in 0u8..=255 {
-        let hex = format!("0x{:02X}", idx);
+        let hex = format!("0x{idx:02X}");
         if let Some(opcode) = opcodes.get(&hex) {
             code.push_str(&format!(
                 r#"    OpcodeEntry {{
@@ -101,7 +101,7 @@ fn map_opcodes(mut code: String, opcodes: HashMap<String, RawOpcode>) -> String 
                 hex, opcode.mnemonic, opcode.length
             ));
             for cycle in &opcode.cycles {
-                code.push_str(&format!("            {},\n", cycle));
+                code.push_str(&format!("            {cycle},\n"));
             }
             code.push_str("        ],\n");
             code.push_str("        operands: &[\n");
@@ -145,13 +145,13 @@ fn render_operand(raw: &RawOperand) -> String {
 
     if let Some(hex) = raw.name.strip_prefix('$') {
         let b = u8::from_str_radix(hex, 16)
-            .expect(format!("Invalid hex literal in operand: {}", &raw.name).as_str());
-        return format!("Literal({})", b);
+            .unwrap_or_else(|_| panic!("Invalid hex literal in operand: {}", &raw.name));
+        return format!("Literal({b})");
     }
 
     if raw.immediate && raw.name.chars().all(|c| c.is_ascii_digit()) {
         let b = raw.name.parse::<u8>().unwrap();
-        return format!("Literal({})", b);
+        return format!("Literal({b})");
     }
 
     if raw.name == "d8" || raw.name == "e8" {
